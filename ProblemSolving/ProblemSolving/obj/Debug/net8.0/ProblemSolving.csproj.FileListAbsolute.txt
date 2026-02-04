@@ -1,0 +1,15 @@
+D:\Problem_Solving\ProblemSolving\ProblemSolving\bin\Debug\net8.0\ProblemSolving.exe
+D:\Problem_Solving\ProblemSolving\ProblemSolving\bin\Debug\net8.0\ProblemSolving.deps.json
+D:\Problem_Solving\ProblemSolving\ProblemSolving\bin\Debug\net8.0\ProblemSolving.runtimeconfig.json
+D:\Problem_Solving\ProblemSolving\ProblemSolving\bin\Debug\net8.0\ProblemSolving.dll
+D:\Problem_Solving\ProblemSolving\ProblemSolving\bin\Debug\net8.0\ProblemSolving.pdb
+D:\Problem_Solving\ProblemSolving\ProblemSolving\obj\Debug\net8.0\ProblemSolving.GeneratedMSBuildEditorConfig.editorconfig
+D:\Problem_Solving\ProblemSolving\ProblemSolving\obj\Debug\net8.0\ProblemSolving.AssemblyInfoInputs.cache
+D:\Problem_Solving\ProblemSolving\ProblemSolving\obj\Debug\net8.0\ProblemSolving.AssemblyInfo.cs
+D:\Problem_Solving\ProblemSolving\ProblemSolving\obj\Debug\net8.0\ProblemSolving.csproj.CoreCompileInputs.cache
+D:\Problem_Solving\ProblemSolving\ProblemSolving\obj\Debug\net8.0\ProblemSolving.sourcelink.json
+D:\Problem_Solving\ProblemSolving\ProblemSolving\obj\Debug\net8.0\ProblemSolving.dll
+D:\Problem_Solving\ProblemSolving\ProblemSolving\obj\Debug\net8.0\refint\ProblemSolving.dll
+D:\Problem_Solving\ProblemSolving\ProblemSolving\obj\Debug\net8.0\ProblemSolving.pdb
+D:\Problem_Solving\ProblemSolving\ProblemSolving\obj\Debug\net8.0\ProblemSolving.genruntimeconfig.cache
+D:\Problem_Solving\ProblemSolving\ProblemSolving\obj\Debug\net8.0\ref\ProblemSolving.dll
