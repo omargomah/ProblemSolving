@@ -4,6 +4,11 @@
     {
         static void Main(string[] args)
         {
+            var result = SolutionArrayAndHashing.ProductExceptSelf([-1, 0, 1, 2, 3]);
+            foreach (var item in result)
+            {
+                Console.WriteLine(item);
+            }
         }
         #region Array & Hashing
 
@@ -129,6 +134,57 @@
             public static List<string> Decode(string s) => s is null ? [] : [.. s.Split(' ')];
 
             #endregion
+
+            #region Products of Array Except Self
+
+            public static int[] ProductExceptSelf(int[] nums)
+            {
+                int length = nums.Length;
+                int[] right = new int[length + 1];
+                right[length] = 1;
+                int[] left = new int[length + 1];
+                left[0] = 1;
+                for (int i = 0; i < length; i++)
+                {
+                    left[i+1] = left[i] * nums[i];
+                    right[length - 1 - i] = right[length - i] * nums[ length - 1 - i];
+                }
+                int [] result = new int[length];
+                for(int i =0; i< length; i++)
+                {
+                    result[i] = left[i] * right[i+1];
+                }
+                return result;
+
+            }
+
+            #endregion
+
+            #region Valid Sudoku
+
+            //public static bool IsValidSudoku(char[][] board)
+            //{
+
+            //    int[,] mapRow = new int[9, 10];
+            //    int[,] mapColumn = new int[9, 10];
+            //    int[,] mapSquare = new int[9, 10];
+            //    char x;
+            //    for (int i = 0; i < 9; i++)
+            //    {
+            //        for (int j = 0; j < 9; j++)
+            //        {
+            //            x = board[i][j];
+            //            if (x != '.')
+            //            {
+            //                mapRow[i, x - '0']++;
+            //                mapColumn[j, x - '0']++;
+            //                mapSquare[,]
+            //            }
+            //        }
+            //    }
+            //}
+            #endregion
+
         }
 
         #endregion
