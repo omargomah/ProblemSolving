@@ -211,18 +211,82 @@
 
             #endregion
 
-
             #region Longest Consecutive Sequence
 
             public static int LongestConsecutive(int[] nums)
             {
 
+                HashSet<int> set = new HashSet<int>();
+                List<int> start = new List<int>();
+                foreach (var item in nums)
+                {
+                    set.Add(item);
+                }
+                for (int i = 0; i < nums.Length; i++) 
+                {
+                    if (!set.Contains(nums[i]-1))
+                    {
+                        start.Add(nums[i]);
+                    }
+                }
+                int result = 0;
+                foreach(int item in start)
+                {
+                    int count = 0;
+                    int next = item;
+                    while (set.Contains(next++))
+                    {
+                        count++;
+                    }
+                    if(count > result)
+                        result = count;
+                }
+                return  result;
+
+            }
+
+            #endregion
+
+
+        }
+
+        #endregion
+      
+        #region Two pointers
+        public static class SolutionTwoPointer
+        {
+            #region Valid Palindrome
+            public static bool IsPalindrome(string s)
+            {
+                int l = 0, r = s.Length - 1;
+                s = s.ToLower();
+                while (l < r) 
+                {
+                    while (!char.IsLetterOrDigit(s[l]))
+                    {
+                        l++;
+                        if (l >= r)
+                            break;
+                    }
+                    while (!char.IsLetterOrDigit(s[r]))
+                    {
+                        r--;
+                        if (l >= r)
+                            break;
+                    }
+                    if (l >= r)
+                        break;
+                    if ( s[l] != s[r])
+                        return false;
+                    l++;
+                    r--;
+                }
+                return true;
             }
 
             #endregion
 
         }
-
         #endregion
     }
 
