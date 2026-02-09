@@ -255,6 +255,7 @@
         #region Two pointers
         public static class SolutionTwoPointer
         {
+
             #region Valid Palindrome
             public static bool IsPalindrome(string s)
             {
@@ -284,6 +285,65 @@
                 return true;
             }
 
+            #endregion
+
+            #region Two Integer Sum II
+
+            public static int[] TwoSum(int[] numbers, int target)
+            {
+                int l= 0 , r=numbers.Length-1 , sum = 0;
+                while(l < r)
+                {
+                    sum = numbers[l] + numbers[r];
+                    if (sum > target)
+                        r--;
+                    else if (sum < target)
+                        l++;
+                    else
+                        return [l+1, r+1];
+                }
+                return null!;
+
+            }
+
+
+
+            #endregion
+
+            #region 3Sum
+            public static List<List<int>> ThreeSum(int[] nums)
+            {
+                int l, r,target,sum;
+                List<List<int>> list = new List<List<int>>();
+                Dictionary<int,int> dict = new Dictionary<int, int>();
+                HashSet<int> set = new HashSet<int>();
+                List<int> order = new List<int>();
+                for (int i = 0; i < nums.Length; i++)
+                    dict[nums[i]] = i;
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    l = 0;
+                    r = nums.Length -1;
+                    target = -nums[i];
+                    for (int j = 0; j < nums.Length;j++)
+                    {
+                        if (j == i)
+                            continue;
+                        if (dict.ContainsKey(target - nums[j]) && dict[target - nums[j]] != i && dict[target - nums[j]] != j)
+                        {
+                            order=[nums[i], nums[j], target - nums[j]];
+                            var result = order.Order().ToList();
+                            var hash = HashCode.Combine(result[0], result[1], result[2]);
+                            if (!set.Contains(hash))
+                            {
+                                set.Add(hash);
+                                list.Add([nums[i],nums[j], target - nums[j]]);
+                            }
+                        }
+                    }
+                }
+                return list;
+            }
             #endregion
 
         }
