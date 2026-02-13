@@ -391,7 +391,118 @@
             }
             #endregion
 
+            #region Trapping Rain Water
+            // i make analysis to the problem wrong this code is true but for another Case
+            public static int TrapCase(int[] height)
+            {
+                int s = 0 , e = 1, sum = 0 , result = 0, temp = 0;
+                while (true) 
+                {
+                    sum = 0;
+                    while (s < (height.Length - 1) && height[s] < height[s + 1])
+                    {
+                        s++;
+                    }
+                    if (s >= height.Length)
+                        break;
+                    e = s + 1;
+                    while (e < (height.Length - 1) && height[e] > height[e + 1] )
+                    {
+                        sum += height[e];
+                        e++;                        
+                    }
+                    temp = e;
+                    while(e < (height.Length - 1) && height[e] < height[e + 1])
+                    {
+                        sum += height[e];
+                        e++;
+                    }
+                    if(e >= (height.Length - 1))
+                    {
+                        if (temp != e)
+                        {
+                            result = result + ((e - s - 1) * Math.Min(height[s], height[e]) - sum);
+                        }
+                        break;
+                    }
+                    result = result + ((e - s - 1) * Math.Min(height[s], height[e]) - sum);
+                    s = temp;
+                }
+                return result;
+            }
+
+            #endregion
+            
+            #region Trapping Rain Water
+            public static int Trap(int[] height)
+            {
+                int l = 0 , r = height.Length -1 , maxLeft = 0, maxRight = 0, result = 0 , i = 0 ;
+                bool IsLeft;
+                while (l <= r) 
+                {
+                    IsLeft = false;
+                    if (maxLeft <= maxRight)
+                    {
+                        i = l;
+                        l++;
+                        IsLeft = true;
+                    }
+                    else
+                    { 
+                        i = r;
+                        r--;
+                    }
+                    if (Math.Min(maxLeft, maxRight) - height[i] > 0)
+                        result += Math.Min(maxLeft, maxRight) - height[i];
+                    if (IsLeft)
+                        maxLeft = Math.Max(maxLeft, height[i]);
+                    else
+                        maxRight = Math.Max(maxRight, height[i]);
+                }
+                return result;
+            }
+
+            #endregion
+
+            }
+        #endregion
+
+
+        #region Stack
+
+        public static class SolutionStack
+        {
+            #region Valid Parentheses
+        public static bool IsValid(string s)
+        {
+            Stack<char> stack = new Stack<char>();
+            Dictionary<char,char> dict = new Dictionary<char, char>();
+            dict[')'] = '(';
+            dict['}'] = '{';
+            dict[']'] = '[';
+
+            foreach (var item in s)
+            {
+                if (dict.Any(x => x.Value == item))
+                    stack.Push(item);
+                else 
+                {
+                    if(stack.Count == 0)
+                        return false;
+                    if (!(dict[item] == stack.Peek()))
+                        return false;
+                    stack.Pop();
+                }
+            }
+            return stack.Count == 0 ;
         }
+
+        #endregion
+        
+        
+        
+        }
+
         #endregion
     }
 
@@ -452,6 +563,59 @@
         public int GetCapacity() => StaticArray.Length;
     }
 
+    #endregion
+ 
+    
+    #region MinStack
+
+    public class MinStack
+    {
+        public class Node
+        {
+            public int Item { get; set; }
+            public int Min { get; set; }
+            public Node Next { get; set; }
+        }
+        private Node _top;
+        public MinStack()
+        {
+            _top = null!;
+        }
+        private bool IsEmpty() => _top is null;
+
+        public void Push(int val)
+        {
+            Node newNode = new Node()
+            {
+                Item = val,
+                Next = _top,
+                Min = _top is null ? val :Math.Min(val, _top.Min)   
+            };
+            _top = newNode;
+
+        }
+
+        public void Pop()
+        {
+            if (IsEmpty())
+                return;
+            _top = _top.Next;
+        }
+
+        public int Top()
+        {
+            if(IsEmpty())
+                return -1;
+            return _top.Item;
+        }
+
+        public int GetMin()
+        {
+            if(IsEmpty())
+                return -1;
+            return _top.Min;
+        }
+    }
     #endregion
 
 }
