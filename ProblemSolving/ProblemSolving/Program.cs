@@ -1,9 +1,12 @@
-﻿namespace ProblemSolving
+﻿using System.Collections;
+
+namespace ProblemSolving
 {
     internal class Program
     {
         static void Main(string[] args)
         {
+
         }
         #region Array & Hashing
 
@@ -473,34 +476,87 @@
         public static class SolutionStack
         {
             #region Valid Parentheses
-        public static bool IsValid(string s)
-        {
-            Stack<char> stack = new Stack<char>();
-            Dictionary<char,char> dict = new Dictionary<char, char>();
-            dict[')'] = '(';
-            dict['}'] = '{';
-            dict[']'] = '[';
-
-            foreach (var item in s)
+            public static bool IsValid(string s)
             {
-                if (dict.Any(x => x.Value == item))
-                    stack.Push(item);
-                else 
-                {
-                    if(stack.Count == 0)
-                        return false;
-                    if (!(dict[item] == stack.Peek()))
-                        return false;
-                    stack.Pop();
-                }
-            }
-            return stack.Count == 0 ;
-        }
+                Stack<char> stack = new Stack<char>();
+                Dictionary<char,char> dict = new Dictionary<char, char>();
+                dict[')'] = '(';
+                dict['}'] = '{';
+                dict[']'] = '[';
 
-        #endregion
-        
-        
-        
+                foreach (var item in s)
+                {
+                    if (dict.Any(x => x.Value == item))
+                        stack.Push(item);
+                    else 
+                    {
+                        if(stack.Count == 0)
+                            return false;
+                        if (!(dict[item] == stack.Peek()))
+                            return false;
+                        stack.Pop();
+                    }
+                }
+                return stack.Count == 0 ;
+            }
+
+            #endregion
+            #region Evaluate Reverse Polish Notation
+            public static int EvalRPN(string[] tokens)
+            {
+                Stack<int> s = new Stack<int>();
+                foreach (var item in tokens)
+                {
+                    if (int.TryParse(item, out int num))
+                        s.Push(num);
+                    else 
+                    {
+                        int num2 = s.Pop() , num1 = s.Pop(), result = 0;
+                        switch (item)
+                        {
+                            case "+":
+                                result = num1 + num2;
+                                break;
+                            case "-":
+                                result = num1 - num2;
+                                break;
+                            case "*":
+                                result = num1 * num2;
+                                break;
+                            case "/":
+                                result = num1 / num2;
+                                break;
+                            default:
+                                break;
+                        }
+                        s.Push(result);
+                    }
+                }
+                return s.Pop() ;
+            }
+
+            #endregion
+
+            #region Daily Temperatures
+            public static int[] DailyTemperatures(int[] temperatures)
+            {
+                Stack<(int,int)> s = new Stack<(int, int)> ();
+                int[] result = new int[temperatures.Length]; 
+                result[temperatures.Length - 1] = 0;
+                s.Push((temperatures[temperatures.Length-1], temperatures.Length - 1));
+                for (int i = temperatures.Length - 2; i > -1 ; i--)
+                { 
+                    while (s.Count != 0 && s.Peek().Item1 <= temperatures[i])
+                    {
+                        s.Pop();
+                    }
+                    result[i] = s.Count == 0 ? 0 : s.Peek().Item2 - i ;
+                    s.Push((temperatures[i],i));
+                }
+                return result ;
+            }
+            #endregion
+
         }
 
         #endregion
