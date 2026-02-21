@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Runtime.Serialization.Formatters;
 
 namespace ProblemSolving
 {
@@ -6,8 +7,8 @@ namespace ProblemSolving
     {
         static void Main(string[] args)
         {
-
         }
+
         #region Array & Hashing
 
         public static class SolutionArrayAndHashing
@@ -470,7 +471,6 @@ namespace ProblemSolving
             }
         #endregion
 
-
         #region Stack
 
         public static class SolutionStack
@@ -501,6 +501,7 @@ namespace ProblemSolving
             }
 
             #endregion
+       
             #region Evaluate Reverse Polish Notation
             public static int EvalRPN(string[] tokens)
             {
@@ -580,13 +581,66 @@ namespace ProblemSolving
             #region Largest Rectangle In Histogram
             public static int LargestRectangleArea(int[] heights)
             {
-
+                Stack<(int,int)> s = new Stack<(int, int)>();
+                Stack<int> area = new Stack<int>();
+                for (int i = 0; i < heights.Length; i++)
+                {
+                    int start = i;
+                    while (s.Count != 0 && s.Peek().Item1 > heights[i])
+                    {
+                        area.Push(s.Peek().Item1*(i-s.Peek().Item2));
+                        start = s.Peek().Item2;
+                        s.Pop();
+                    }
+                    s.Push((heights[i],start));
+                }
+                while (s.Count != 0)
+                {
+                    area.Push(s.Peek().Item1 * (heights.Length - s.Peek().Item2));
+                    s.Pop();
+                }
+                int maxArea = 0;
+                
+                while (area.Count != 0)
+                { 
+                    if(area.Peek() > maxArea)
+                        maxArea = area.Peek();
+                    area.Pop();
+                }
+                return maxArea;
 
 
             }
             #endregion
         }
 
+        #endregion
+
+        #region Binary Search
+        public static class SolutionBinarySearch
+        {
+            #region Binary Search
+
+            public static int Search(int[] nums, int target)
+            {
+                int l = 0, r = nums.Length - 1, mid;
+                while (r>=l)
+                {
+                    mid = (l + r) / 2;
+                    if (nums[mid] > target)
+                        r = mid - 1;
+                    else if(nums[mid] < target)
+                        l = mid + 1;
+                    else
+                        return mid;
+                }
+                return -1;
+            }
+             
+            #endregion
+       
+            
+        }
         #endregion
     }
 
