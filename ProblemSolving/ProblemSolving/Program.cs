@@ -7,6 +7,7 @@ namespace ProblemSolving
     {
         static void Main(string[] args)
         {
+            Console.WriteLine(SolutionBinarySearch.MinEatingSpeed([1, 1, 1, 999999999],10));
         }
 
         #region Array & Hashing
@@ -676,6 +677,31 @@ namespace ProblemSolving
             public static int MinEatingSpeed(int[] piles, int h)
             {
 
+                int start = 1 ,max = 0 ,mid ,result = int.MaxValue ,hours;
+                for (int i = 0; i < piles.Length; i++)
+                {
+                    if (piles[i] > max)
+                        max = piles[i];
+                }
+
+                while (start <= max)
+                {
+                    hours = 0;
+                    mid =(start+max) / 2;
+                    foreach (var item in piles)
+                    {
+                        hours += (int)Math.Ceiling(item / (double)mid);
+                    }
+                    if (hours > h)
+                        start = mid+1;
+                    else if (hours <= h)
+                    {
+                        if(mid < result)
+                            result = mid;
+                        max = mid-1;
+                    }
+                }
+                return result;
             }
 
             #endregion
