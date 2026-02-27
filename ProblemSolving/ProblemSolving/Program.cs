@@ -7,7 +7,7 @@ namespace ProblemSolving
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(SolutionBinarySearch.MinEatingSpeed([1, 1, 1, 999999999],10));
+            Console.WriteLine(SolutionBinarySearch.FindMin([5, 1, 2, 3, 4]));
         }
 
         #region Array & Hashing
@@ -705,6 +705,32 @@ namespace ProblemSolving
             }
 
             #endregion
+
+            #region Find Minimum in Rotated Sorted Array
+            public static int FindMin(int[] nums)
+            {
+                int l = 0, r = nums.Length - 1,mid , min = int.MaxValue;
+                while (r>=l)
+                {
+                    mid = (l + r) / 2;
+                    if (nums[l] < nums[r])
+                    {
+                        if (nums[l] < min)
+                            min = nums[l];
+                        break;
+                    }
+                    if (nums[mid] < min )
+                        min = nums[mid];                        
+                    if (nums[mid] >= nums[l])
+                        l = mid + 1;
+                    else
+                        r = mid - 1;
+                }
+                return min;
+            }
+
+            #endregion
+
 
         }
         #endregion
