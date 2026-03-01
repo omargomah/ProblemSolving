@@ -7,7 +7,13 @@ namespace ProblemSolving
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(SolutionBinarySearch.FindMin([5, 1, 2, 3, 4]));
+            SolutionBinarySearch.TimeMap timeMap = new SolutionBinarySearch.TimeMap();
+                timeMap.Set("foo", "bar", 5);
+                timeMap.Set("foo", "bar2", 10);
+                Console.WriteLine(timeMap.Get("foo", 7)); // return "bar"
+                Console.WriteLine(timeMap.Get("omar", 7)); // return "bar" since there is a value at timestamp 2, which is before timestamp 3
+                //Console.WriteLine(timeMap.Get("foo", 4)); // return "bar2"
+                //Console.WriteLine(timeMap.Get("foo", 5)); // return "bar2" since there is a value at timestamp 4, which is before timestamp 5
         }
 
         #region Array & Hashing
@@ -730,7 +736,69 @@ namespace ProblemSolving
             }
 
             #endregion
+            
+            #region Time Based Key-Value Store
+            public class TimeMap
+            {
+                Dictionary<string, List<(int,string)>> dict;
+                public TimeMap()
+                {
+                    dict = new Dictionary<string, List<(int, string)>>();
+                }
 
+                public void Set(string key, string value, int timestamp)
+                {
+                    if(!dict.ContainsKey(key))
+                        dict[key] = new List<(int, string)>();
+                    dict[key].Add((timestamp,value));
+                }
+
+                public string Get(string key, int timestamp)
+                {
+                    if (!dict.ContainsKey(key) )
+                        return "";
+                    List<(int ,string)> res = dict[key];
+                    int l = 0 , r = res.Count-1 ,mid , x = int.MinValue;
+                    string y = "";
+                    while (l <= r)
+                    {
+                        mid = (l + r) / 1;
+                        if (res[mid].Item1 == timestamp)
+                            return res[mid].Item2;
+                        else if (res[mid].Item1 > timestamp)
+                            r = mid - 1;
+                        else
+                        { 
+                            l = mid + 1;
+                            if (res[mid].Item1 > x)
+                                y = res[mid].Item2;
+                        }
+                        
+                    }
+                    return y;
+                }
+            }
+            #endregion
+
+            #region Median of Two Sorted Arrays
+            public static double FindMedianSortedArrays(int[] nums1, int[] nums2)
+            {
+                int l1 = 0  ,l2 = 0 , r1= nums1.Length - 1 , r2 = nums2.Length-1 ,mid;
+                if (nums1.Length == 0)
+                {
+                    return nums2.Length % 2 == 0 ? (nums2[nums2.Length / 2] + nums2[nums2.Length / 2])/(double)2  : nums2[nums2.Length/2];
+                }
+                if (nums2.Length == 0)
+                {
+                    return nums1.Length % 2 == 0 ? (nums1[nums1.Length / 2] + nums1[nums1.Length / 2]) / (double)2 : nums1[nums1.Length / 2];
+                }
+                while (true) 
+                {
+                    mid = (l1 + r1)/2;
+                    if(mid+1  < (nums1.Length - (mid + 1)+))
+                }
+            }
+            #endregion
 
         }
         #endregion
