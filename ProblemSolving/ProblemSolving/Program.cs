@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Runtime.Serialization.Formatters;
+using System.Xml;
 
 namespace ProblemSolving
 {
@@ -7,13 +8,7 @@ namespace ProblemSolving
     {
         static void Main(string[] args)
         {
-            SolutionBinarySearch.TimeMap timeMap = new SolutionBinarySearch.TimeMap();
-                timeMap.Set("foo", "bar", 5);
-                timeMap.Set("foo", "bar2", 10);
-                Console.WriteLine(timeMap.Get("foo", 7)); // return "bar"
-                Console.WriteLine(timeMap.Get("omar", 7)); // return "bar" since there is a value at timestamp 2, which is before timestamp 3
-                //Console.WriteLine(timeMap.Get("foo", 4)); // return "bar2"
-                //Console.WriteLine(timeMap.Get("foo", 5)); // return "bar2" since there is a value at timestamp 4, which is before timestamp 5
+            Console.WriteLine(SolutionBinarySearch.FindMedianSortedArrays([1,2], [3,4]));
         }
 
         #region Array & Hashing
@@ -783,23 +778,119 @@ namespace ProblemSolving
             #region Median of Two Sorted Arrays
             public static double FindMedianSortedArrays(int[] nums1, int[] nums2)
             {
-                int l1 = 0  ,l2 = 0 , r1= nums1.Length - 1 , r2 = nums2.Length-1 ,mid;
+                if (nums1.Length < nums2.Length)
+                {
+                    int[] temp = nums1;
+                    nums1 = nums2;
+                    nums2 = temp;
+                }
+                int l = 0  , r= nums1.Length - 1,mid , half = (nums1.Length + nums2.Length)/2 , Lnum1, Lnum2, Rnum1, Rnum2;
                 if (nums1.Length == 0)
-                {
-                    return nums2.Length % 2 == 0 ? (nums2[nums2.Length / 2] + nums2[nums2.Length / 2])/(double)2  : nums2[nums2.Length/2];
-                }
+                    return nums2.Length % 2 == 0 ? (nums2[nums2.Length/2]+ nums2[nums2.Length / 2 - 1])/(double)2 : nums2[nums2.Length / 2];
                 if (nums2.Length == 0)
+                    return nums1.Length % 2 == 0 ? (nums1[nums1.Length / 2] + nums1[nums1.Length / 2 - 1]) / (double)2 : nums1[nums1.Length / 2];
+                bool IsEven = (nums1.Length + nums2.Length) % 2 == 0 ? true : false; 
+                while (true)
                 {
-                    return nums1.Length % 2 == 0 ? (nums1[nums1.Length / 2] + nums1[nums1.Length / 2]) / (double)2 : nums1[nums1.Length / 2];
+                    mid = (l + r) / 2;
+                    Lnum1 = mid >= 0 ? nums1[mid]: int.MinValue;
+                    Lnum2 = half - (mid + 2) >=0 ? nums2[half - (mid + 2)] : int.MinValue;
+                    Rnum1 = mid + 1 >= nums1.Length ? int.MaxValue :nums1[mid+1];
+                    Rnum2 = half - (mid + 1) > nums2.Length ? int.MaxValue : nums2[half - (mid + 1)];
+                    if (Lnum1 <= Rnum2 && Lnum2 <= Rnum1)
+                    {
+                        if (IsEven)
+                            return (Math.Max(Lnum1, Lnum2) + Math.Min(Rnum1,Rnum2)) / (double)2;
+                        else
+                            return Math.Min(Rnum1, Rnum2);
+                    }
+                    if(Lnum1 > Rnum2)
+                        r = mid-1;
+                    else if(Lnum2 > Rnum1)
+                        l = mid+1;   
                 }
-                while (true) 
-                {
-                    mid = (l1 + r1)/2;
-                    if(mid+1  < (nums1.Length - (mid + 1)+))
-                }
+
             }
             #endregion
 
+        }
+        #endregion
+
+
+        #region LinkedList
+        public static class SolutionLinkedList
+        {
+            public class ListNode
+            {
+                public int val;
+                public ListNode next;
+                public ListNode(int val = 0, ListNode next = null)
+                {
+                    this.val = val;
+                    this.next = next;
+                }
+             }
+            #region Reverse Linked List
+            public static ListNode ReverseList(ListNode head)
+            {
+                ListNode prev = null;
+                ListNode next = head;
+                ListNode cur = head;
+                while (next is not null)
+                {
+                    next = cur.next;
+                    cur.next = prev;
+                    prev = cur;
+                    cur = next;
+                }
+                return prev;
+            }
+            #endregion
+
+            #region Merge Two Sorted Linked Lists
+            public static ListNode MergeTwoLists(ListNode list1, ListNode list2)
+            {
+                ListNode head = null;
+                ListNode back =  null;
+                ListNode temp =  null;
+                while(true)
+                {
+                    if (list1 is null && list2 is null)
+                    {
+                        return head;
+                    }
+                    if ( list1 is not null && (list2 is null || list1.val < list2.val ))
+                    {
+                        temp = new ListNode(list1.val);
+                        if (back is null)
+                        {
+                            back = head = temp;
+                        }
+                        else 
+                        {
+                            back.next = temp;
+                            back = temp;
+                        }
+                        list1 = list1.next;
+                    }
+                    else
+                    {
+                        temp = new ListNode(list2!.val);
+                        if (back is null)
+                        {
+                            back = head =temp;
+                        }
+                        else
+                        { 
+                            back.next = temp;
+                            back = temp;
+                        }
+                        list2 = list2.next;
+                    }
+                }
+            }
+            #endregion
+      
         }
         #endregion
     }
