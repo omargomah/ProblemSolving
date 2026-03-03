@@ -8,7 +8,7 @@ namespace ProblemSolving
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(SolutionBinarySearch.FindMedianSortedArrays([1,2], [3,4]));
+
         }
 
         #region Array & Hashing
@@ -890,7 +890,84 @@ namespace ProblemSolving
                 }
             }
             #endregion
-      
+            
+            #region Linked List Cycle Detection
+            public static bool HasCycle(ListNode head)
+            {
+                HashSet<ListNode> visited = new HashSet<ListNode>();
+                while (head != null) 
+                {
+                    if (visited.Contains(head))
+                        return true;
+                    visited.Add(head);
+                    head = head.next;
+                }
+                return false;
+            }
+            public static bool HasCycleWithoutHashSet(ListNode head)
+            {
+                ListNode? slow = head , fast = head?.next?? null;
+                while (fast != null)
+                {
+                    if (slow == fast)
+                        return true;
+                    fast = fast?.next?.next ?? null;
+                    slow = slow.next;
+                }
+                return false;
+            }
+
+            #endregion
+
+            #region Reorder Linked List
+            public static void ReorderList(ListNode head)
+            {
+                //  1 2 3 4 5 6 7
+                // 1 7 2 6 3 5 4
+                // 1 6 2 5 3 4
+
+                List<ListNode> listNodes = new List<ListNode>();
+                while (head is not null)
+                {
+                    listNodes.Add(head);
+                    head = head.next;
+                }
+                int length = listNodes.Count , l =  0, r = listNodes.Count-1;
+                while (l < r)
+                {
+                    listNodes[l++].next = listNodes[r];
+                    if(l>=r)
+                        break;
+                    listNodes[r--].next = listNodes[l];
+                }
+                listNodes[l].next = null!;
+                head = listNodes[0];
+            }
+            #endregion
+
+            #region Remove Node From End of Linked List
+            public static ListNode RemoveNthFromEnd(ListNode head, int n)
+            { 
+                // 1 2 3 4
+                ListNode x = head , y = head;
+                int temp = n;
+                while (y != null &&n!=-1)
+                {
+                    y = y.next;
+                    n--;
+                }
+                if (y is  null && n!=-1 )
+                    return head.next;
+                while (y is not null)
+                {
+                    y = y.next;
+                    x = x.next;
+                }
+                x.next = x.next.next;
+                return head;
+            }
+            #endregion 
+
         }
         #endregion
     }
