@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics.Tracing;
 using System.Runtime.Serialization.Formatters;
 using System.Xml;
 
@@ -8,6 +9,17 @@ namespace ProblemSolving
     {
         static void Main(string[] args)
         {
+            SolutionLinkedList.Node node = new SolutionLinkedList.Node(1);
+                node.next = new SolutionLinkedList.Node(2);
+                node.next.next = new SolutionLinkedList.Node(3);
+                node.next.next.next = null!;
+            node.random = node.next.next;
+            var result = SolutionLinkedList.copyRandomList(node);
+            while (result != null)
+            {
+                Console.WriteLine(result.val);
+                result = result.next;
+            }
 
         }
 
@@ -966,9 +978,144 @@ namespace ProblemSolving
                 x.next = x.next.next;
                 return head;
             }
-            #endregion 
+            #endregion
 
+            #region copy list with random pointer
+            public class Node
+            {
+                public int val;
+                public Node next;
+                public Node random;
+
+                public Node(int _val)
+                {
+                    val = _val;
+                    next = null;
+                    random = null;
+                }
+            }
+
+            // O(n^2) time and O(n) space
+            public static int GetIndexOfRandom(Node r, Node x)
+            {
+                int count = 0;
+                while (r != null)
+                {
+                    if (r == x)
+                        return count;
+                    count++;
+                    r = r.next;
+                }
+                return -1;
+            }
+            public static Node copyRandomList(Node head)
+            {
+                Node newHead = null!, back = null!, temp = head, x;
+                List<int> indexes = new List<int>();
+                while (temp != null)
+                {
+                    Node newNode = new Node(temp.val);
+                    if (newHead is null)
+                        newHead = back = newNode;
+                    else
+                    {
+                        back.next = newNode;
+                        back = newNode;
+                    }
+                    indexes.Add(GetIndexOfRandom(head, temp.random));
+                    temp = temp.next;
+                }
+                temp = newHead; int i = 0;
+                while (temp is not null)
+                {
+                    x = newHead;
+                    if (indexes[i] == -1)
+                        temp.random = null!;
+                    else
+                    {
+                        for (int j = 0; j < indexes[i]; i++)
+                            x = x.next;
+                        temp.random = x;
+                    }
+                    temp = temp.next;
+                    i++;
+                }
+                return newHead;
+            }
+
+            // O(n) time and O(n) space
+            public static Node copyRandomListV2(Node head)
+            {
+                Node temp = head;
+                Dictionary<Node, Node> dict = new Dictionary<Node, Node>();
+                List<int> indexes = new List<int>();
+                while (temp is not null)
+                {
+                    Node newNode = new Node(temp.val);
+                    dict[temp] = newNode;
+                    temp = temp.next;
+                }
+                temp = head; 
+                while (temp is not null)
+                {
+                    if(temp.next is not null)
+                        dict[temp].next = dict[temp.next];
+                    if(temp.random is not null)
+                        dict[temp].random = dict[temp.random];
+                    temp = temp.next;
+                }
+                return dict[head];
+            }
+
+            #endregion
+            #region Add Two Numbers
+            public static ListNode AddTwoNumbers(ListNode l1, ListNode l2)
+            {
+                // 321   --> 1 2 3
+                // 975  -->  5 7 9
+                ListNode result =null! , back= null!;
+                int sum ,prev=0;
+                while (l1 is not null && l2 is not null)
+                {
+                    sum = l1.val + l2.val+ prev;
+                    ListNode temp = new ListNode(sum%10);
+                    if(result is null)
+                        result = back = temp;
+                    else
+                        back.next = temp;
+                    back = temp;
+                    prev = sum/10;
+                    l1 = l1.next;
+                    l2 = l2.next;
+                }
+                while (l1 is not null)
+                {
+                    sum = l1.val + prev;
+                    ListNode temp = new ListNode(sum%10);
+                    back.next = temp;
+                    back = temp;
+                    l1 = l1.next;
+                    prev = sum / 10;
+                }
+                while (l2 is not null)
+                {
+                    sum = l2.val + prev;
+                    ListNode temp = new ListNode(sum%10);
+                    back.next = temp;
+                    back = temp;
+                    l2 = l2.next;
+                    prev = sum / 10;
+                }
+                if (prev==1)
+                {
+                    ListNode temp = new ListNode(prev);
+                    back.next = temp;
+                }
+                return result;
+            }
+            #endregion
         }
+
         #endregion
     }
 
