@@ -11,67 +11,28 @@ namespace ProblemSolving
     {
         static void Main(string[] args)
         {
-            //LRUCache lRUCache = new LRUCache(2);
-            //lRUCache.Put(1, 10);  // cache: {1=10}
-            //Console.WriteLine(lRUCache.Get(1));        // return 10
-            //lRUCache.Put(2, 20);  // cache: {1=10, 2=20}
-            //lRUCache.Put(3, 30);  // cache: {2=20, 3=30}, key=1 was evicted
-            //Console.WriteLine(lRUCache.Get(2));       // returns 20 
-            //Console.WriteLine(lRUCache.Get(1));      // return -1 (not found)
+            // List 1: [1, 4, 5]
+            ListNode head1 = new ListNode(1,
+                                new ListNode(4,
+                                    new ListNode(5)));
 
-            //LRUCache lRUCache = new LRUCache(2);
+            // List 2: [1, 3, 4]
+            ListNode head2 = new ListNode(1,
+                                new ListNode(3,
+                                    new ListNode(4)));
 
-            //lRUCache.Put(1, 1);           // Cache: {1=1}
-            //lRUCache.Put(2, 2);           // Cache: {1=1, 2=2}
+            // List 3: [2, 6]
+            ListNode head3 = new ListNode(2,
+                                new ListNode(6));
 
-            //Console.WriteLine(lRUCache.Get(1));    // Returns 1
-
-            //lRUCache.Put(3, 3);           // Evicts key 2, Cache: {1=1, 3=3}
-
-            //Console.WriteLine(lRUCache.Get(2));    // Returns -1 (not found)
-
-            //lRUCache.Put(4, 4);           // Evicts key 1, Cache: {3=3, 4=4}
-
-            //Console.WriteLine(lRUCache.Get(1));    // Returns -1 (not found)
-            //Console.WriteLine(lRUCache.Get(3));    // Returns 3
-            //Console.WriteLine(lRUCache.Get(4));    // Returns 4
-
-            //LRUCache cache = new LRUCache(2);
-
-            //cache.Put(1, 1);
-            //cache.Put(2, 2);
-            //Console.WriteLine(cache.Get(1));    // Returns 1
-            //cache.Put(3, 3);                   // Evicts key 2
-            //Console.WriteLine(cache.Get(1));    // Returns 1
-            //Console.WriteLine(cache.Get(2));    // Returns -1
-            //Console.WriteLine(cache.Get(3));    // Returns 3
-            //Console.WriteLine(cache.Get(1));    // Returns 1
-            //cache.Put(4, 4);                   // Evicts key 3
-            //Console.WriteLine(cache.Get(1));    // Returns 1
-            //Console.WriteLine(cache.Get(3));    // Returns -1
-            //Console.WriteLine(cache.Get(4));    // Returns 4
-
-            // Initialize with capacity 1
-            //var lru = new LRUCache(1);
-
-            //lru.Put(2, 1);
-            //Console.WriteLine(lru.Get(2));    // Output: 1
-
-            //lru.Put(3, 2);                   // Key 2 is evicted immediately
-            //Console.WriteLine(lru.Get(2));    // Output: -1 (Not Found)
-            //Console.WriteLine(lru.Get(3));    // Output: 2
-
-            // Initialize with capacity 2
-
-            //var lru = new LRUCache(2);
-
-            //Console.WriteLine(lru.Get(2));    // Output: -1
-            //lru.Put(2, 6);
-            //Console.WriteLine(lru.Get(1));    // Output: -1
-            //lru.Put(1, 5);
-            //lru.Put(1, 2);                   // Updates existing key 1
-            //Console.WriteLine(lru.Get(1));    // Output: 2
-            //Console.WriteLine(lru.Get(2));    // Output: 6
+            // Putting the heads into the large array
+            ListNode[] listHeads = new ListNode[] { head1, head2, head3 };
+            ListNode mergedHead = MergeKLists(listHeads);
+            while (mergedHead != null)
+            {
+                Console.Write(mergedHead.val + " ");
+                mergedHead = mergedHead.next;
+            }
         }
 
         #region Array & Hashing
@@ -1288,6 +1249,56 @@ namespace ProblemSolving
                         count++;
                     }
                 }
+            }
+            #endregion
+
+            #region Merge K Sorted Linked Lists
+            public static ListNode MergeKLists(ListNode[] lists)
+            {
+
+                ListNode head = null ,back = null;
+                int j = 0, index=0;
+                while (true)
+                {
+                    j = 0;
+                    for (int i = 0; i < lists.Length; i++)
+                    {
+                        if (lists[i] == null)
+                        {
+                            j++;
+                            continue;
+                        }
+                        else
+                        {
+                            index = i;
+                            break;
+                        }
+                        
+                    }
+                    if (j == lists.Length)
+                        break;
+                    for (int i = j+1; i < lists.Length ; i++)
+                    {
+                        if (lists[i] == null)
+                            continue;
+                        if (lists[index].val > lists[i].val)
+                            index = i;
+                    }
+                    if (head is null)
+                    {
+                        head = back =lists[index];
+                        lists[index] = head.next;
+                        head.next = null;
+                    }
+                    else
+                    {
+                        back.next = lists[index];
+                        back = back.next;
+                        lists[index] = lists[index].next;
+                        back.next = null;
+                    }
+                }
+                return head;
             }
             #endregion
         }
