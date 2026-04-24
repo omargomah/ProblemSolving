@@ -2,6 +2,8 @@
 using System.Diagnostics.Tracing;
 using System.Runtime.Serialization.Formatters;
 using System.Xml;
+using System.Xml.Serialization;
+using static ProblemSolving.Program.SolutionLinkedList;
 
 namespace ProblemSolving
 {
@@ -9,18 +11,67 @@ namespace ProblemSolving
     {
         static void Main(string[] args)
         {
-            SolutionLinkedList.Node node = new SolutionLinkedList.Node(1);
-                node.next = new SolutionLinkedList.Node(2);
-                node.next.next = new SolutionLinkedList.Node(3);
-                node.next.next.next = null!;
-            node.random = node.next.next;
-            var result = SolutionLinkedList.copyRandomList(node);
-            while (result != null)
-            {
-                Console.WriteLine(result.val);
-                result = result.next;
-            }
+            //LRUCache lRUCache = new LRUCache(2);
+            //lRUCache.Put(1, 10);  // cache: {1=10}
+            //Console.WriteLine(lRUCache.Get(1));        // return 10
+            //lRUCache.Put(2, 20);  // cache: {1=10, 2=20}
+            //lRUCache.Put(3, 30);  // cache: {2=20, 3=30}, key=1 was evicted
+            //Console.WriteLine(lRUCache.Get(2));       // returns 20 
+            //Console.WriteLine(lRUCache.Get(1));      // return -1 (not found)
 
+            //LRUCache lRUCache = new LRUCache(2);
+
+            //lRUCache.Put(1, 1);           // Cache: {1=1}
+            //lRUCache.Put(2, 2);           // Cache: {1=1, 2=2}
+
+            //Console.WriteLine(lRUCache.Get(1));    // Returns 1
+
+            //lRUCache.Put(3, 3);           // Evicts key 2, Cache: {1=1, 3=3}
+
+            //Console.WriteLine(lRUCache.Get(2));    // Returns -1 (not found)
+
+            //lRUCache.Put(4, 4);           // Evicts key 1, Cache: {3=3, 4=4}
+
+            //Console.WriteLine(lRUCache.Get(1));    // Returns -1 (not found)
+            //Console.WriteLine(lRUCache.Get(3));    // Returns 3
+            //Console.WriteLine(lRUCache.Get(4));    // Returns 4
+
+            //LRUCache cache = new LRUCache(2);
+
+            //cache.Put(1, 1);
+            //cache.Put(2, 2);
+            //Console.WriteLine(cache.Get(1));    // Returns 1
+            //cache.Put(3, 3);                   // Evicts key 2
+            //Console.WriteLine(cache.Get(1));    // Returns 1
+            //Console.WriteLine(cache.Get(2));    // Returns -1
+            //Console.WriteLine(cache.Get(3));    // Returns 3
+            //Console.WriteLine(cache.Get(1));    // Returns 1
+            //cache.Put(4, 4);                   // Evicts key 3
+            //Console.WriteLine(cache.Get(1));    // Returns 1
+            //Console.WriteLine(cache.Get(3));    // Returns -1
+            //Console.WriteLine(cache.Get(4));    // Returns 4
+
+            // Initialize with capacity 1
+            //var lru = new LRUCache(1);
+
+            //lru.Put(2, 1);
+            //Console.WriteLine(lru.Get(2));    // Output: 1
+
+            //lru.Put(3, 2);                   // Key 2 is evicted immediately
+            //Console.WriteLine(lru.Get(2));    // Output: -1 (Not Found)
+            //Console.WriteLine(lru.Get(3));    // Output: 2
+
+            // Initialize with capacity 2
+
+            //var lru = new LRUCache(2);
+
+            //Console.WriteLine(lru.Get(2));    // Output: -1
+            //lru.Put(2, 6);
+            //Console.WriteLine(lru.Get(1));    // Output: -1
+            //lru.Put(1, 5);
+            //lru.Put(1, 2);                   // Updates existing key 1
+            //Console.WriteLine(lru.Get(1));    // Output: 2
+            //Console.WriteLine(lru.Get(2));    // Output: 6
         }
 
         #region Array & Hashing
@@ -841,7 +892,7 @@ namespace ProblemSolving
                     this.val = val;
                     this.next = next;
                 }
-             }
+            }
             #region Reverse Linked List
             public static ListNode ReverseList(ListNode head)
             {
@@ -1068,6 +1119,7 @@ namespace ProblemSolving
             }
 
             #endregion
+        
             #region Add Two Numbers
             public static ListNode AddTwoNumbers(ListNode l1, ListNode l2)
             {
@@ -1112,6 +1164,130 @@ namespace ProblemSolving
                     back.next = temp;
                 }
                 return result;
+            }
+            #endregion
+
+            #region Find the Duplicate Number
+            public static int FindDuplicate(int[] nums)
+            {
+                int i = 0, j = 0 ;
+                while (true)
+                {
+                    i = nums[i];
+                    j = nums[nums[j]];
+                    if (i == j)
+                    {
+                        i = 0;
+                        while (true)
+                        { 
+                            if (i == j)
+                                return i; 
+                            i = nums[i];
+                            j = nums[j];
+                        }
+                    }
+                }
+            }
+
+
+            #endregion
+            
+            #region LRU Cache
+            public class DoubleNode
+            {
+                public int val;
+                public int key;
+                public DoubleNode next;
+                public DoubleNode prev;
+                public DoubleNode(int val = 0, int key = 0, DoubleNode next = null, DoubleNode prev = null)
+                {
+                    this.val = val;
+                    this.key = key;
+                    this.next = next;
+                    this.prev = prev;
+                }
+            }
+            public class LRUCache
+            {
+                Dictionary<int,DoubleNode> Dict;
+                DoubleNode head,back;
+                int cap , count;
+                public LRUCache(int capacity)
+                {
+                    Dict = new Dictionary<int, DoubleNode>(capacity);
+                    head = back = null;
+                    cap = capacity;
+                    count = 0;
+                }
+
+                public int Get(int key)
+                {
+                    if (Dict.ContainsKey(key) )
+                    {
+                        Track(key);
+                        return Dict[key].val ;
+                    }
+                    return -1;
+                }
+                private void Track(int key)
+                {
+                    if (count > 1)
+                    {
+                        DoubleNode temp = Dict[key];
+                        if (temp == head)
+                        {
+                            head = head.next;
+                            head.prev = null;
+                            temp.next = null;
+                            back.next = temp;
+                            temp.prev = back;
+                            back = temp;
+                        }
+                        else if (temp != back)
+                        {
+                            temp.prev.next = temp.next;
+                            temp.next.prev = temp.prev;
+                            temp.prev = back;
+                            back.next = temp;
+                            temp.next = null;
+                            back = temp;
+                        }
+                    }
+                }
+                public void Put(int key, int value)
+                {
+                    if (Dict.ContainsKey(key))
+                    {
+                        Dict[key].val = value;
+                        Track(key);
+                    }
+                    else 
+                    {
+                        DoubleNode node = new DoubleNode(value,key);
+                        if (count == cap)
+                        {
+                            Dict.Remove(head.key);
+                            if (count == 1)
+                                back = head = null;
+                            else
+                            {
+                                head = head.next;
+                                head.prev = null;
+                            }
+                            count--;
+                        }
+                        if (back is null )
+                            back = head = node;
+                        else
+                        {
+                            back.next = node;
+                            node.prev = back;
+                            back = node;
+                        }
+                        Dict[key] = node;
+                        count++;
+                    }
+                }
             }
             #endregion
         }
